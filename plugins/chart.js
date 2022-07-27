@@ -1,15 +1,16 @@
 import Vue from "vue";
-import Line from "vue-chartjs";
+import { Line } from "vue-chartjs";
 
 Vue.component("line-chart", {
-  extend: Line,
+  extends: Line,
 
-  // props
+  //props
   props: ["data"],
 
-  // method
+  //method
   methods: {
-    // format price
+    //format price
+
     formatPrice(value) {
       let val = (value / 1).toFixed(0).replace(".", ",");
 
@@ -17,7 +18,7 @@ Vue.component("line-chart", {
     },
   },
 
-  // computed
+  //computed
   computed: {
     options() {
       return {
@@ -48,7 +49,7 @@ Vue.component("line-chart", {
     },
   },
 
-  // mounted
+  //mounted
   mounted() {
     this.renderChart(this.data, this.options);
   },
