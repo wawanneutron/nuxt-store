@@ -49,6 +49,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    // custom API
+    "@/plugins/api",
     // https://www.npmjs.com/package/vue-star-rating
     { src: "~/plugins/vue-star-rating.js", mode: "client" },
     // https://www.chartjs.org/
