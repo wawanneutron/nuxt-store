@@ -43,4 +43,24 @@ export const actions = {
         });
     });
   },
+
+  // store product
+  storeProduct({ dispatch }, payload) {
+    // set promise
+    return new Promise((resolve, reject) => {
+      // store to Rest API "/api/admin/products" with method "POST"
+      this.$axios
+        .post("/api/admin/products", payload)
+        .then(() => {
+          dispatch("getProductsData");
+          // resolve
+          resolve();
+        })
+        // error
+        .catch((error) => {
+          // reject
+          reject(error);
+        });
+    });
+  },
 };
