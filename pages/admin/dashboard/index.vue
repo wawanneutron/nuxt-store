@@ -110,11 +110,24 @@ export default {
     };
   },
 
+  data() {
+    return {
+      statistic: {
+        pending: "",
+        success: "",
+        expired: "",
+        failed: "",
+      },
+
+      dashboard: [],
+    };
+  },
+
   async asyncData({ $axios }) {
     // fetching dashboard
     const dashboard = await $axios.$get("/api/admin/dashboard");
 
-    // statistic.pending
+    // statistic
     const statistic = {
       pending: dashboard.data.count.pending,
       success: dashboard.data.count.success,
