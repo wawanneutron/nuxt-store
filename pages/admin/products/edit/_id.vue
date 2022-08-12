@@ -7,23 +7,18 @@
             <div class="card border-0 rounded shadow-sm border-top-orange">
               <div class="card-header">
                 <span class="font-weight-bold"
-                  ><i class="fa fa-folder"></i> ADD NEW PRODUCT</span
+                  ><i class="fa fa-folder"></i> EDIT PRODUCT</span
                 >
               </div>
               <div class="card-body">
-                <form @submit.prevent="storeProduct">
+                <form @submit.prevent="updateProduct">
                   <div class="form-group">
                     <label>GAMBAR</label>
                     <input
-                      @change="handleFileImage"
                       type="file"
+                      @change="handleFileChange"
                       class="form-control"
                     />
-                    <div v-if="validation.image" class="mt-2">
-                      <b-alert show variant="danger">{{
-                        validation.image[0]
-                      }}</b-alert>
-                    </div>
                   </div>
 
                   <div class="row">
@@ -31,8 +26,8 @@
                       <div class="form-group">
                         <label>NAMA PRODUCT</label>
                         <input
-                          v-model="product.title"
                           type="text"
+                          v-model="product.title"
                           placeholder="Masukkan Nama Product"
                           class="form-control"
                         />
@@ -73,8 +68,8 @@
                       <div class="form-group">
                         <label>WEIGHT (Gram)</label>
                         <input
-                          v-model="product.weight"
                           type="number"
+                          v-model="product.weight"
                           placeholder="Masukkan Berat Product (Gram)"
                           class="form-control"
                         />
@@ -89,8 +84,8 @@
                       <div class="form-group">
                         <label>STOCK</label>
                         <input
-                          v-model="product.stock"
                           type="number"
+                          v-model="product.stock"
                           placeholder="Masukkan Stock Product"
                           class="form-control"
                         />
@@ -123,8 +118,8 @@
                       <div class="form-group">
                         <label>PRICE</label>
                         <input
-                          v-model="product.price"
                           type="number"
+                          v-model="product.price"
                           placeholder="Masukkan Harga Product"
                           class="form-control"
                         />
@@ -139,8 +134,8 @@
                       <div class="form-group">
                         <label>DISCOUNT (%)</label>
                         <input
-                          v-model="product.discount"
                           type="number"
+                          v-model="product.discount"
                           placeholder="Masukkan Discount Product (%)"
                           class="form-control"
                         />
@@ -154,7 +149,7 @@
                   </div>
 
                   <button class="btn btn-info mr-1 btn-submit" type="submit">
-                    <i class="fa fa-paper-plane"></i> SAVE
+                    <i class="fa fa-paper-plane"></i> UPDATE
                   </button>
                   <button class="btn btn-warning btn-reset" type="reset">
                     <i class="fa fa-redo"></i> RESET
@@ -171,13 +166,11 @@
 
 <script>
 export default {
-  // layout
   layout: "admin",
 
-  // meta
   head() {
     return {
-      title: "Add New Product - Administrator",
+      title: "Edit Product - Administrator",
     };
   },
 
@@ -202,11 +195,10 @@ export default {
         price: "",
         discount: "",
       },
-
       // state validation
       validation: [],
 
-      // config CKEDITOR
+      // ckeditor confg
       editorConfig: {
         removePlugins: ["Title"],
       },
@@ -214,26 +206,36 @@ export default {
   },
 
   // hook "asyncData"
-  async asyncData({ store }) {
-    // get all data categories
+  async asyncData({ store, route }) {
+    // get list all categories
     await store.dispatch("admin/category/getListAllCategories");
+
+    // get detail product
+    await store.dispatch("admin/product/getDetailProduct", route.params.id);
   },
 
-  // computed
   computed: {
-    // get data categories
+    // data categories
     categories() {
       return this.$store.state.admin.category.categories;
     },
   },
 
   mounted() {
-    console.log(this.categories);
+    this.product.title = this.$store.state.admin.product.product.title;
+    this.product.category_id =
+      this.$store.state.admin.product.product.category_id;
+    this.product.weight = this.$store.state.admin.product.product.weight;
+    this.product.stock = this.$store.state.admin.product.product.stock;
+    this.product.description =
+      this.$store.state.admin.product.product.description;
+    this.product.price = this.$store.state.admin.product.product.price;
+    this.product.discount = this.$store.state.admin.product.product.discount;
   },
 
-  // methods
   methods: {
-    handleFileImage(event) {
+    // handle file upload
+    handleFileChange(event) {
       // get image
       let image = (this.product.image = event.target.files[0]);
       const kb = Math.round(+image.size / 1024).toFixed(2);
@@ -267,9 +269,9 @@ export default {
       }
     },
 
-    // method save product
-    async storeProduct() {
-      // define form data
+    // update data product
+    async updateProduct() {
+      //define formData
       let formData = new FormData();
 
       formData.append("image", this.product.image);
@@ -280,38 +282,33 @@ export default {
       formData.append("price", this.product.price);
       formData.append("stock", this.product.stock);
       formData.append("discount", this.product.discount);
+      formData.append("_method", "PATCH");
 
-      // sending data to action "storeProduct" vuex
+      // sending data to action "updateProduct" vuex
       await this.$store
-        .dispatch("admin/product/storeProduct", formData)
+        .dispatch("admin/product/updateProduct", {
+          productId: this.$route.params.id,
+          payload: formData,
+        })
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: "BERHASIL!",
-            text: "Data Berhasil Disimpan!",
+            text: "Data Berhasil Diupdate!",
             icon: "success",
             showConfirmButton: false,
             timer: 2000,
           });
-          /*
-          if sending data to server is success
-          and then redirect route "admin-product"
-         */
+
+          // redirect route "admin-products"
           this.$router.push({
             name: "admin-products",
           });
         })
         .catch((error) => {
-          // if sending data is failed, return error
           this.validation = error.response.data;
         });
     },
   },
 };
 </script>
-
-<style>
-.ck-editor__editable {
-  min-height: 200px;
-}
-</style>
