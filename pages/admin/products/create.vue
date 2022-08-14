@@ -241,6 +241,12 @@ export default {
 
       // check size image not allowed > 1 mb
       if (kb > 1000) {
+        // clear value and set  null
+        event.target.value = null;
+
+        // clear state image
+        this.product.image = null;
+
         //show sweet alert
         this.$swal.fire({
           title: "OOPS!",

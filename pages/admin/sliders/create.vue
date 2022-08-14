@@ -7,45 +7,37 @@
             <div class="card border-0 rounded shadow-sm border-top-orange">
               <div class="card-header">
                 <span class="font-weight-bold"
-                  ><i class="fa fa-folder"></i> EDIT CATEGORY</span
+                  ><i class="fa fa-folder"></i> ADD NEW SLIDER</span
                 >
               </div>
               <div class="card-body">
-                <form @submit.prevent="updateCategory">
+                <form @submit.prevent="storeSlider">
                   <div class="form-group">
-                    <div>
-                      <img :src="previewImage" width="200" alt="" />
-                    </div>
                     <label>GAMBAR</label>
                     <input
-                      @change="handleFileUpload"
                       type="file"
+                      @change="handleFileChange"
                       class="form-control"
                     />
-                    <div v-if="validation.name" class="mt-2">
+                    <div v-if="validation.image" class="mt-2">
                       <b-alert show variant="danger">{{
-                        validation.name[0]
+                        validation.image[0]
                       }}</b-alert>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label>NAMA CATEGORY</label>
+                    <label>LINK SLIDER</label>
                     <input
-                      v-model="category.name"
                       type="text"
-                      placeholder="Masukkan Nama Category"
+                      v-model="slider.link"
+                      placeholder="Masukkan Link Slider"
                       class="form-control"
                     />
-                    <div v-if="validation.name" class="mt-2">
-                      <b-alert show variant="danger">{{
-                        validation.name[0]
-                      }}</b-alert>
-                    </div>
                   </div>
 
                   <button class="btn btn-info mr-1 btn-submit" type="submit">
-                    <i class="fa fa-paper-plane"></i> UPDATE
+                    <i class="fa fa-paper-plane"></i> SAVE
                   </button>
                   <button class="btn btn-warning btn-reset" type="reset">
                     <i class="fa fa-redo"></i> RESET
@@ -62,49 +54,33 @@
 
 <script>
 export default {
-  // layout
+  //layout
   layout: "admin",
 
-  // meta
+  //meta
   head() {
     return {
-      title: "Edit Category  - Administrator",
+      title: "Add New Slider - Administrator",
     };
   },
 
   data() {
     return {
-      // state category
-      category: {
+      //state slider
+      slider: {
         image: "",
-        name: "",
+        link: "",
       },
-
-      previewImage: "",
-
-      // set validation
+      //state validation
       validation: [],
     };
   },
 
-  // hook "asyncData"
-  async asyncData({ store, route }) {
-    await store.dispatch("admin/category/getDetailCategory", route.params.id);
-  },
-
-  // mounted
-  // data dieksekusi ketika template di render
-  mounted() {
-    this.category.name = this.$store.state.admin.category.category.name;
-    this.previewImage = this.$store.state.admin.category.category.image;
-  },
-
-  // method
   methods: {
     //handle file upload
-    handleFileUpload(event) {
+    handleFileChange(event) {
       // get image
-      let image = (this.category.image = event.target.files[0]);
+      let image = (this.slider.image = event.target.files[0]);
       const kb = Math.round(+image.size / 1024).toFixed(2);
       const mb = Math.round(+image.size / 1024 / 1000).toFixed(2);
 
@@ -114,7 +90,7 @@ export default {
         event.target.value = null;
 
         // clear state image
-        this.category.image = null;
+        this.slider.image = null;
 
         //show sweet alert
         this.$swal.fire({
@@ -129,7 +105,7 @@ export default {
         // if fileType no allowed, then clear value and set null
         event.target.value = "";
         // set state to null
-        this.category.image = null;
+        this.slider.image = null;
 
         //show sweet alert
         this.$swal.fire({
@@ -142,35 +118,32 @@ export default {
       }
     },
 
-    // method update category
-    async updateCategory() {
+    //method "storeSlider"
+    async storeSlider() {
       //define formData
       let formData = new FormData();
 
-      formData.append("image", this.category.image);
-      formData.append("name", this.category.name);
-      formData.append("_method", "PATCH");
+      formData.append("image", this.slider.image);
+      formData.append("link", this.slider.link);
 
-      //sending data to action "updateCategory" vuex
+      //sending data to action "storeSlider" vuex
       await this.$store
-        .dispatch("admin/category/updateCategory", {
-          categoryId: this.$route.params.id,
-          payload: formData,
-        })
+        .dispatch("admin/slider/storeSlider", formData)
+
         //success
         .then(() => {
           //sweet alert
           this.$swal.fire({
             title: "BERHASIL!",
-            text: "Data Berhasil Diupdate!",
+            text: "Data Berhasil Disimpan!",
             icon: "success",
             showConfirmButton: false,
             timer: 2000,
           });
 
-          //redirect route "admin-categories"
+          //redirect route "admin-sliders"
           this.$router.push({
-            name: "admin-categories",
+            name: "admin-sliders",
           });
         })
 

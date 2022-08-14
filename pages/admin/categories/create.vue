@@ -83,12 +83,35 @@ export default {
 
   methods: {
     //handle file upload
-    handleFileUpload(e) {
-      //get image
-      let image = (this.category.image = e.target.files[0]);
+    handleFileUpload(event) {
+      // get image
+      let image = (this.category.image = event.target.files[0]);
+      const kb = Math.round(+image.size / 1024).toFixed(2);
+      const mb = Math.round(+image.size / 1024 / 1000).toFixed(2);
 
-      //check fileType
+      // check size image not allowed > 1 mb
+      if (kb > 1000) {
+        // clear value and set  null
+        event.target.value = null;
+
+        // clear state image
+        this.category.image = null;
+
+        //show sweet alert
+        this.$swal.fire({
+          title: "OOPS!",
+          text: `Ukuran gambar kamu ${mb} MB, upload ulang dengan ukuran kurang dari 1 mb`,
+          icon: "error",
+        });
+      }
+
+      // check file type
       if (!image.type.match("image.*")) {
+        // if fileType no allowed, then clear value and set null
+        event.target.value = "";
+        // set state to null
+        this.category.image = null;
+
         //show sweet alert
         this.$swal.fire({
           title: "OOPS!",
