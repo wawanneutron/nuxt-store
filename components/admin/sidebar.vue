@@ -38,48 +38,48 @@
     <li class="c-sidebar-nav-title">ORDERS</li>
 
     <li class="c-sidebar-nav-item">
-      <a href="#" class="c-sidebar-nav-link">
+      <nuxt-link :to="{ name: 'admin-invoices' }" class="c-sidebar-nav-link">
         <svg class="c-sidebar-nav-icon">
           <use
             xlink:href="@/node_modules/@coreui/icons/sprites/free.svg#cil-cart"
           ></use>
         </svg>
-        Invoices</a
+        Invoices</nuxt-link
       >
     </li>
 
     <li class="c-sidebar-nav-title">OTHERS</li>
 
     <li class="c-sidebar-nav-item">
-      <a href="#" class="c-sidebar-nav-link">
+      <nuxt-link :to="{ name: 'admin-customers' }" class="c-sidebar-nav-link">
         <svg class="c-sidebar-nav-icon">
           <use
             xlink:href="@/node_modules/@coreui/icons/sprites/free.svg#cil-user"
           ></use>
         </svg>
-        Customers</a
+        Customers</nuxt-link
       >
     </li>
 
     <li class="c-sidebar-nav-item">
-      <a href="#" class="c-sidebar-nav-link">
+      <nuxt-link :to="{ name: 'admin-sliders' }" class="c-sidebar-nav-link">
         <svg class="c-sidebar-nav-icon">
           <use
             xlink:href="@/node_modules/@coreui/icons/sprites/free.svg#cil-laptop"
           ></use>
         </svg>
-        Sliders</a
+        Sliders</nuxt-link
       >
     </li>
 
     <li class="c-sidebar-nav-item">
-      <a href="#" class="c-sidebar-nav-link">
+      <nuxt-link :to="{ name: 'admin-users' }" class="c-sidebar-nav-link">
         <svg class="c-sidebar-nav-icon">
           <use
             xlink:href="@/node_modules/@coreui/icons/sprites/free.svg#cil-group"
           ></use>
         </svg>
-        Users</a
+        Users</nuxt-link
       >
     </li>
 

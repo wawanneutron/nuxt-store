@@ -7,7 +7,7 @@
             <div class="card border-0 rounded shadow-sm border-top-orange">
               <div class="card-header">
                 <span class="font-weight-bold"
-                  ><i class="fa fa-layer-group"></i> PRODUCTS</span
+                  ><i class="fa fa-users"></i> USERS</span
                 >
               </div>
               <div class="card-body">
@@ -15,7 +15,7 @@
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                       <nuxt-link
-                        :to="{ name: 'admin-products-create' }"
+                        :to="{ name: 'admin-users-create' }"
                         class="btn btn-warning btn-sm"
                         style="padding-top: 10px"
                       >
@@ -23,11 +23,11 @@
                       >
                     </div>
                     <input
-                      v-model="search"
-                      @keypress="searchData"
                       type="text"
                       class="form-control"
-                      placeholder="cari berdasarkan nama product"
+                      v-model="search"
+                      @keypress="searchData"
+                      placeholder="cari berdasarkan nama user"
                     />
                     <div class="input-group-append">
                       <button @click="searchData" class="btn btn-warning">
@@ -37,18 +37,22 @@
                     </div>
                   </div>
                 </div>
+
                 <b-table
                   striped
                   bordered
                   hover
-                  :items="products.data"
+                  :items="users.data"
                   :fields="fields"
                   show-empty
                 >
+                  <template v-slot:cell(image)="data">
+                    <img class="img-fluid" width="50" :src="data.item.image" />
+                  </template>
                   <template v-slot:cell(actions)="row">
                     <b-button
                       :to="{
-                        name: 'admin-products-edit-id',
+                        name: 'admin-users-edit-id',
                         params: { id: row.item.id },
                       }"
                       variant="info"
@@ -59,7 +63,7 @@
                     <b-button
                       variant="danger"
                       size="sm"
-                      @click="destroyProduct(row.item.id)"
+                      @click="destroyUser(row.item.id)"
                       >DELETE</b-button
                     >
                   </template>
@@ -68,10 +72,10 @@
                 <!-- pagination -->
                 <b-pagination
                   align="right"
-                  :value="products.current_page"
-                  :total-rows="products.total"
-                  :per-page="products.per_page"
-                  @change="chengePage"
+                  :value="users.current_page"
+                  :total-rows="users.total"
+                  :per-page="users.per_page"
+                  @change="changePage"
                   aria-controls="my-table"
                 ></b-pagination>
               </div>
@@ -85,33 +89,28 @@
 
 <script>
 export default {
-  // layout
+  //layout
   layout: "admin",
 
-  // meta
+  //meta
   head() {
     return {
-      title: "Products - Administrator",
+      title: "Users - Administrator",
     };
   },
 
-  // data function
+  //data function
   data() {
     return {
       //table header
       fields: [
         {
-          label: "Product Name",
-          key: "title",
+          label: "User Name",
+          key: "name",
         },
         {
-          label: "Category Name",
-          key: "category.name",
-        },
-        {
-          label: "Stock",
-          key: "stock",
-          tdClass: "text-center",
+          label: "Email Address",
+          key: "email",
         },
         {
           label: "Actions",
@@ -124,38 +123,37 @@ export default {
     };
   },
 
-  // hook "asyncData"
+  //hook "asyncData"
   async asyncData({ store }) {
-    await store.dispatch("admin/product/getProductsData");
+    await store.dispatch("admin/user/getUsersData");
   },
 
-  // computed
+  //computed
   computed: {
-    // get data products
-    products() {
-      return this.$store.state.admin.product.products;
+    //users
+    users() {
+      return this.$store.state.admin.user.users;
     },
   },
 
-  // methods
+  // method
   methods: {
     searchData() {
-      // commit to mutation "SET_PAGE"
-      this.$store.commit("admin/product/SET_PAGE", 1);
-
-      // dispatch on actions "getProductsData"
-      this.$store.dispatch("admin/product/getProductsData", this.search);
+      // commit set page
+      this.$store.commit("admin/user/SET_PAGE", 1);
+      // dispatch on action "getUsersData"
+      this.$store.dispatch("admin/user/getUsersData", this.search);
     },
 
-    chengePage(page) {
-      // commot to mutation "SET_PAGE"
-      this.$store.commit("admin/product/SET_PAGE", page);
+    changePage(page) {
+      //commit to mutation "SET_PAGE"
+      this.$store.commit("admin/user/SET_PAGE", page);
 
-      // dispatch on actions "getProductsData"
-      this.$store.dispatch("admin/product/getProductsData", this.search);
+      //dispatch on action "getUsersData"
+      this.$store.dispatch("admin/user/getUsersData", this.search);
     },
 
-    destroyProduct(id) {
+    destroyUser(id) {
       this.$swal
         .fire({
           title: "APAKAH ANDA YAKIN ?",
@@ -169,22 +167,20 @@ export default {
         })
         .then((result) => {
           if (result.isConfirmed) {
-            // dispatch to action "deleteCategory" vuex
-            this.$store
-              .dispatch("admin/product/destroyProduct", id)
-              .then(() => {
-                // fresh data
-                this.$nuxt.refresh();
+            //dispatch to action "destroyUser" vuex
+            this.$store.dispatch("admin/user/destroyUser", id).then(() => {
+              //feresh data
+              this.$nuxt.refresh();
 
-                //alert
-                this.$swal.fire({
-                  title: "BERHASIL!",
-                  text: "Data Berhasil Dihapus!",
-                  icon: "success",
-                  showConfirmButton: false,
-                  timer: 2000,
-                });
+              //alert
+              this.$swal.fire({
+                title: "BERHASIL!",
+                text: "Data Berhasil Dihapus!",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 2000,
               });
+            });
           }
         });
     },
