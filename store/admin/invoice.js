@@ -5,6 +5,9 @@ export const state = () => ({
 
   // page
   page: 1,
+
+  // invoice
+  invoice: {},
 });
 
 // mutations
@@ -19,6 +22,11 @@ export const mutatations = {
   SET_PAGE(state, payload) {
     // set value state "page"
     state.page = payload;
+  },
+
+  // mutation "SET_INVOICE_DATA"
+  SET_INVOICE_DATA(state, payload) {
+    state.invoice = payload;
   },
 };
 
@@ -40,6 +48,21 @@ export const actions = {
           // resolve promise
           resolve();
         });
+    });
+  },
+
+  // get detail invoice
+  getDetailInvoice({ commit }, payload) {
+    // return
+    return new Promise((resolve) => {
+      // get to Rest API "/api/admin/invoices/:id" with method "GET"
+      this.$axios.get(`/api/admin/invoices/${payload}`).then((response) => {
+        // commit to mutation "SET_INVOICES_DATA"
+        commit("SET_INVOICE_DATA", response.data.data);
+
+        // resolve promise
+        resolve();
+      });
     });
   },
 };
