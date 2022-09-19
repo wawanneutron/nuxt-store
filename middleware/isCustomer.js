@@ -5,7 +5,7 @@ export default function ({ $auth, redirect }) {
   }
 
   //* check customer role
-  if ($auth.strategy.name != "customer") {
+  if ($auth.strategy.name !== "customer") {
     return redirect("/customer/login");
   } else {
     return;
