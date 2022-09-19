@@ -38,7 +38,6 @@
                   <template v-slot:cell(grand_total)="row">
                     Rp. {{ formatPrice(row.item.grand_total) }}
                   </template>
-                  <!-- status -->
                   <template v-slot:cell(status)="row">
                     <button
                       v-if="row.item.status == 'pending'"
@@ -67,13 +66,11 @@
                       <i class="fa fa-times-circle"></i> {{ row.item.status }}
                     </button>
                   </template>
-
-                  <!-- button detail -->
                   <template v-slot:cell(actions)="row">
                     <b-button
                       :to="{
-                        name: 'admin-invoices-show-id',
-                        params: { id: row.item.id },
+                        name: 'customer-invoices-show-snap_token',
+                        params: { snap_token: row.item.snap_token },
                       }"
                       variant="info"
                       size="sm"

@@ -5,12 +5,16 @@
       id="sidebar"
     >
       <div class="c-sidebar-brand d-lg-down-none">
-        <img
-          src="/images/xiaomi.png"
-          class="bg-light rounded shadow-sm p-2"
-          width="35"
-        />
-        <span class="ml-2 font-weight-bold">MI STORE</span>
+        <n-link to="/" class="text-decoration-none">
+          <img
+            src="/images/xiaomi.png"
+            class="bg-light rounded shadow-sm p-2"
+            width="35"
+          />
+          <span class="ml-2 font-weight-bold text-white text-decoration-none"
+            >MI STORE</span
+          >
+        </n-link>
       </div>
 
       <!-- sidebar -->
