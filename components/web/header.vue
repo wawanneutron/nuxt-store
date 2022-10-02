@@ -69,10 +69,38 @@
         </button>
         <div class="navbar-collapse collapse" id="dropdown6">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a href="#" class="nav-link" data-abc="true"
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                data-toggle="dropdown"
+                data-abc="true"
+                aria-expanded="false"
                 ><i class="fa fa-list-ul"></i> KATEGORI</a
               >
+              <div class="dropdown-menu">
+                <nuxt-link
+                  :to="{
+                    name: 'categories-slug',
+                    params: { slug: category.slug },
+                  }"
+                  class="dropdown-item"
+                  v-for="category in categories"
+                  :key="category.id"
+                >
+                  <img :src="category.image" width="50" /> {{ category.name }}
+                </nuxt-link>
+                <div class="dropdown-divider"></div>
+                <nuxt-link
+                  :to="{ name: 'categories' }"
+                  class="dropdown-item active text-center"
+                  href=""
+                  data-abc="true"
+                >
+                  LIHAT SEMUA KATEGORI
+                  <i class="fa fa-long-arrow-alt-right"></i>
+                </nuxt-link>
+              </div>
             </li>
             <li class="nav-item">
               <a href="#" class="nav-link" data-abc="true"
@@ -121,5 +149,21 @@
 </template>
 
 <script>
-export default {};
+export default {
+  //hook "fetch"
+  async fetch() {
+    //fething sliders on Rest API
+    await this.$store.dispatch("web/category/getCategoriesData");
+  },
+
+  computed: {
+    categories() {
+      return this.$store.state.web.category.categories;
+    },
+  },
+
+  created() {
+    console.log(this.categories);
+  },
+};
 </script>
