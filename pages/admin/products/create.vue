@@ -290,7 +290,8 @@ export default {
       // sending data to action "storeProduct" vuex
       await this.$store
         .dispatch("admin/product/storeProduct", formData)
-        .then(() => {
+        .then((response) => {
+          console.log(response);
           //sweet alert
           this.$swal.fire({
             title: "BERHASIL!",
