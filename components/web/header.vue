@@ -17,13 +17,18 @@
             <div class="search-wrap">
               <div class="input-group w-100">
                 <input
+                  v-model="search"
+                  @keypress.enter="searchData"
                   type="text"
                   class="form-control search-form"
                   style="width: 55%"
                   placeholder="mau belanja apa hari ini ?"
                 />
                 <div class="input-group-append">
-                  <button class="btn btn-primary search-button">
+                  <button
+                    @click="searchData"
+                    class="btn btn-primary search-button"
+                  >
                     <i class="fa fa-search"></i>
                   </button>
                 </div>
@@ -82,7 +87,7 @@
                 <nuxt-link
                   :to="{
                     name: 'categories-slug',
-                    params: { slug: category.slug },
+                    params: { slug: category.slug }
                   }"
                   class="dropdown-item"
                   v-for="category in categories"
@@ -156,17 +161,29 @@ export default {
   //hook "fetch"
   async fetch() {
     //fething sliders on Rest API
-    await this.$store.dispatch("web/category/getCategoriesData");
+    await this.$store.dispatch('web/category/getCategoriesData')
   },
+
+  data: () => ({
+    search: ''
+  }),
 
   computed: {
     categories() {
-      return this.$store.state.web.category.categories;
-    },
+      return this.$store.state.web.category.categories
+    }
   },
 
-  created() {
-    console.log(this.categories);
-  },
-};
+  methods: {
+    searchData() {
+      let params = {
+        name: 'search',
+        query: {
+          q: this.search
+        }
+      }
+      this.$router.push(params)
+    }
+  }
+}
 </script>
