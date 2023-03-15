@@ -32,7 +32,7 @@
                     <nuxt-link
                       :to="{
                         name: 'products-slug',
-                        params: { slug: product.slug },
+                        params: { slug: product.slug }
                       }"
                       class="text-default mb-2"
                       data-abc="true"
@@ -42,7 +42,7 @@
                   <nuxt-link
                     :to="{
                       name: 'categories-slug',
-                      params: { slug: product.category.slug },
+                      params: { slug: product.category.slug }
                     }"
                     class="text-muted"
                     data-abc="true"
@@ -90,76 +90,70 @@
 
 <script>
 //import slider
-import Slider from "@/components/web/slider.vue";
+import Slider from '@/components/web/slider.vue'
 
 export default {
   //register components
   components: {
-    Slider,
+    Slider
   },
 
   //meta
   head() {
     return {
-      title: "MI STORE - Distributor Xiaomi Indonesia Resmi",
+      title: 'MI STORE - Distributor Xiaomi Indonesia Resmi',
       meta: [
         {
-          hid: "og:title",
-          name: "og:title",
-          content: "MI STORE - Distributor Xiaomi Indonesia Resmi",
+          hid: 'og:title',
+          name: 'og:title',
+          content: 'MI STORE - Distributor Xiaomi Indonesia Resmi'
         },
         {
-          hid: "og:site_name",
-          name: "og:site_name",
-          content: "MI STORE - Distributor Xiaomi Indonesia Resmi",
+          hid: 'og:site_name',
+          name: 'og:site_name',
+          content: 'MI STORE - Distributor Xiaomi Indonesia Resmi'
         },
         {
-          hid: "og:image",
-          name: "og:image",
-          content: "/images/logo.png",
+          hid: 'og:image',
+          name: 'og:image',
+          content: '/images/logo.png'
         },
         {
-          hid: "description",
-          name: "description",
-          content: "Official Toko Online Penjualan Produk Xiaomi",
-        },
-      ],
-    };
+          hid: 'description',
+          name: 'description',
+          content: 'Official Toko Online Penjualan Produk Xiaomi'
+        }
+      ]
+    }
   },
 
   data: () => ({
     items: {
-      products: [],
-    },
+      products: []
+    }
   }),
 
   // // hook asyncData
   async asyncData({ store }) {
-    await store.dispatch("web/product/getProductsData");
-  },
-
-  mounted() {
-    // this.fetchProducts();
-    console.log(this.isProducts);
-    console.log(this.products);
+    await store.dispatch('web/product/getProductsData')
   },
 
   methods: {
     async fetchProducts() {
-      await this.$store.dispatch("web/product/getProductsData");
-    },
+      await this.$store.dispatch('web/product/getProductsData')
+    }
   },
 
   computed: {
     products() {
-      return this.$store.state.web.product.products;
+      return this.$store.state.web.product.products
     },
 
     isProducts() {
-      return this.$store.getters["web/product/isProducts"];
-    },
-  },
-};
+      return this.$store.getters['web/product/isProducts']
+    }
+  }
+}
 </script>
 
 <style></style>

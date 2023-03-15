@@ -166,29 +166,25 @@
 <script>
 export default {
   //layout
-  layout: "admin",
+  layout: 'admin',
 
   //meta
   head() {
     return {
-      title: "Detail Invoices - Administrator",
-    };
+      title: 'Detail Invoices - Administrator'
+    }
   },
 
   //hook "asyncData"
   async asyncData({ store, route }) {
-    await store.dispatch("admin/invoice/getDetailInvoice", route.params.id);
+    await store.dispatch('admin/invoice/getDetailInvoice', route.params.id)
   },
 
   //computed
   computed: {
     invoice() {
-      return this.$store.state.admin.invoice.invoice;
-    },
-  },
-
-  mounted() {
-    console.log(this.invoice);
-  },
-};
+      return this.$store.state.admin.invoice.invoice
+    }
+  }
+}
 </script>
