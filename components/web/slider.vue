@@ -56,10 +56,6 @@ export default {
       return this.$store.state.web.slider.sliders;
     },
   },
-
-  created() {
-    console.log(this.sliders);
-  },
 };
 </script>
 
