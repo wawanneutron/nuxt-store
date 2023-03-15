@@ -50,5 +50,9 @@ export const actions = {
 export const getters = {
   isProducts(state) {
     return state.products
+  },
+
+  isProduct(state) {
+    return state.product
   }
 }
