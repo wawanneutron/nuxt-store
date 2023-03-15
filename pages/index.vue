@@ -127,14 +127,36 @@ export default {
     };
   },
 
-  // hook asyncData
+  data: () => ({
+    items: {
+      products: [],
+    },
+  }),
+
+  // // hook asyncData
   async asyncData({ store }) {
     await store.dispatch("web/product/getProductsData");
+  },
+
+  mounted() {
+    // this.fetchProducts();
+    console.log(this.isProducts);
+    console.log(this.products);
+  },
+
+  methods: {
+    async fetchProducts() {
+      await this.$store.dispatch("web/product/getProductsData");
+    },
   },
 
   computed: {
     products() {
       return this.$store.state.web.product.products;
+    },
+
+    isProducts() {
+      return this.$store.getters["web/product/isProducts"];
     },
   },
 };
