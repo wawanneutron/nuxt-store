@@ -1,21 +1,21 @@
-import Vue from "vue";
-import { Line } from "vue-chartjs";
+import Vue from 'vue'
+import { Line } from 'vue-chartjs'
 
-Vue.component("line-chart", {
+Vue.component('line-chart', {
   extends: Line,
 
   //props
-  props: ["data"],
+  props: ['data'],
 
   //method
   methods: {
     //format price
 
     formatPrice(value) {
-      let val = (value / 1).toFixed(0).replace(".", ",");
+      let val = (value / 1).toFixed(0).replace('.', ',')
 
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    },
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
+    }
   },
 
   //computed
@@ -29,28 +29,27 @@ Vue.component("line-chart", {
             {
               ticks: {
                 callback: (value, index, values) => {
-                  return `Rp. ${this.formatPrice(value)}`;
-                },
-              },
-            },
-          ],
+                  return `Rp. ${this.formatPrice(value)}`
+                }
+              }
+            }
+          ]
         },
         tooltips: {
           enabled: true,
           callbacks: {
             label: (tooltipItems, data) => {
-              console.log(this);
-              return `Rp. ${this.formatPrice(tooltipItems.yLabel)}`;
-            },
-          },
+              return `Rp. ${this.formatPrice(tooltipItems.yLabel)}`
+            }
+          }
         },
-        beginZero: true,
-      };
-    },
+        beginZero: true
+      }
+    }
   },
 
   //mounted
   mounted() {
-    this.renderChart(this.data, this.options);
-  },
-});
+    this.renderChart(this.data, this.options)
+  }
+})
