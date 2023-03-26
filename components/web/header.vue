@@ -37,10 +37,13 @@
           </div>
           <div class="col-lg-5 col-xl-4 col-sm-8 col-md-4 col-7">
             <div class="d-flex justify-content-end">
-              <a href="#" class="btn search-button btn-md d-md-block ml-4"
+              <n-link
+                to="/cart"
+                class="btn search-button btn-md d-md-block ml-4"
                 ><i class="fa fa-shopping-cart"></i>
-                <span class="ml-2">0</span> | Rp. 0</a
-              >
+                <span class="ml-2">{{ isTotalCart }}</span> | Rp.
+                {{ formatPrice(isTotalPrice) }}
+              </n-link>
             </div>
           </div>
         </div>
@@ -162,6 +165,12 @@ export default {
   async fetch() {
     //fething sliders on Rest API
     await this.$store.dispatch('web/category/getCategoriesData')
+
+    if (this.$auth.loggedIn && this.$auth.strategy.name == 'customer') {
+      //fething carts on Rest API
+      await this.$store.dispatch('web/cart/getCartsData')
+      await this.$store.dispatch('web/cart/getCartPrice')
+    }
   },
 
   data: () => ({
@@ -171,6 +180,14 @@ export default {
   computed: {
     categories() {
       return this.$store.state.web.category.categories
+    },
+
+    isTotalPrice() {
+      return this.$store.getters['web/cart/isTotalPrice']
+    },
+
+    isTotalCart() {
+      return this.$store.getters['web/cart/isTotalCart']
     }
   },
 
