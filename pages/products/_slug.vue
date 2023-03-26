@@ -5,7 +5,7 @@
         <div class="col-md-4 mb-4">
           <div class="card border-0 rounded shadow-sm">
             <div class="card-body">
-              <img :src="product.image" class="w-100 rounded" />
+              <img :src="isProduct.image" class="w-100 rounded" />
             </div>
           </div>
         </div>
@@ -13,17 +13,17 @@
         <div class="col-md-8">
           <div class="card border-0 rounded shadow-sm">
             <div class="card-body">
-              <h4>{{ product.title }}</h4>
+              <h4>{{ isProduct.title }}</h4>
               <hr />
               <h6 class="mb-0 font-weight-semibold">
-                <s class="text-red">Rp. {{ formatPrice(product.price) }}</s> /
-                <strong>{{ product.discount }} %</strong>
+                <s class="text-red">Rp. {{ formatPrice(isProduct.price) }}</s> /
+                <strong>{{ isProduct.discount }} %</strong>
               </h6>
               <h5 class="mb-0 font-weight-semibold mt-3 text-success">
-                Rp. {{ formatPrice(calculateDiscount(product)) }}
+                Rp. {{ formatPrice(calculateDiscount(isProduct)) }}
               </h5>
               <div class="mt-3">
-                <div v-html="product.description"></div>
+                <div v-html="isProduct.description"></div>
               </div>
               <div class="table-responsive">
                 <table class="table table-sm table-borderless mb-0">
@@ -34,7 +34,7 @@
                           <strong>BERAT</strong>
                         </th>
                         <td>
-                          <strong>{{ product.weight }}</strong> gram
+                          <strong>{{ isProduct.weight }}</strong> gram
                         </td>
                       </tr>
                       <tr>
@@ -42,7 +42,7 @@
                           <strong>STOK</strong>
                         </th>
                         <td>
-                          <strong>{{ product.stock }}</strong>
+                          <strong>{{ isProduct.stock }}</strong>
                         </td>
                       </tr>
                     </client-only>
@@ -50,7 +50,10 @@
                 </table>
               </div>
               <hr />
-              <button class="btn btn-lg btn-warning border-0 shadow-sm">
+              <button
+                @click="onAddToCart"
+                class="btn btn-lg btn-warning border-0 shadow-sm"
+              >
                 <i class="fa fa-shopping-cart"></i> TAMBAH KE KERANJANG
               </button>
             </div>
@@ -64,12 +67,12 @@
             <div class="card-body">
               <h5>
                 <i class="fa fa-comments"></i> ULASAN PRODUK (
-                <strong>{{ product.reviews_count }}</strong> ulasan )
+                <strong>{{ isProduct.reviews_count }}</strong> ulasan )
               </h5>
               <hr />
               <div
                 class="card bg-light shadow-sm rounded"
-                v-for="review in product.reviews"
+                v-for="review in isProduct.reviews"
                 :key="review.id"
               >
                 <div class="card-body">
@@ -100,7 +103,7 @@
                       <div class="description mt-2">
                         <span
                           style="
-                            color: rgb(119, 118, 118);
+                            color: rgb(119, 118, 118)
                             font-size: 15px;
                             font-style: italic;
                           "
@@ -125,41 +128,76 @@ export default {
   //meta
   head() {
     return {
-      title: `${this.product.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`,
+      title: `${this.isProduct.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`,
       meta: [
         {
-          hid: "og:title",
-          name: "og:title",
-          content: `${this.product.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`,
+          hid: 'og:title',
+          name: 'og:title',
+          content: `${this.isProduct.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`
         },
         {
-          hid: "og:site_name",
-          name: "og:site_name",
-          content: `${this.product.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`,
+          hid: 'og:site_name',
+          name: 'og:site_name',
+          content: `${this.isProduct.title} - MI STORE - Distributor Xiaomi Indonesia Resmi`
         },
         {
-          hid: "og:image",
-          name: "og:image",
-          content: this.product.image,
+          hid: 'og:image',
+          name: 'og:image',
+          content: this.isProduct.image
         },
         {
-          hid: "description",
-          name: "description",
-          content: `${this.product.title.substr(0, 30)}...`,
-        },
-      ],
-    };
+          hid: 'description',
+          name: 'description',
+          content: `${this.isProduct.title.substr(0, 30)}...`
+        }
+      ]
+    }
   },
 
   // hook async data
   async asyncData({ store, route }) {
-    await store.dispatch("web/product/getDetailProduct", route.params.slug);
+    await store.dispatch('web/product/getDetailProduct', route.params.slug)
+  },
+
+  methods: {
+    async onAddToCart() {
+      // check loggedin
+      if (!this.$auth.loggedIn) {
+        return this.$router.push('/customer/login')
+      }
+
+      // check customer role
+      if (this.$auth.strategy.name != 'customer') {
+        return this.$router.push('/customer/login')
+      }
+
+      const { id, stock, weight } = this.isProduct
+      const priceDiscount = this.calculateDiscount(this.isProduct)
+
+      const payload = {
+        product_id: id,
+        price: priceDiscount,
+        qty: stock,
+        weight: weight
+      }
+
+      await this.$store.dispatch('web/cart/storeCart', payload).then(() => {
+        //sweet alert
+        this.$swal.fire({
+          title: 'BERHASIL!',
+          text: 'Product Berhasil Ditambahkan di Keranjang!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000
+        })
+      })
+    }
   },
 
   computed: {
-    product() {
-      return this.$store.state.web.product.product;
-    },
-  },
-};
+    isProduct() {
+      return this.$store.getters['web/product/isProduct']
+    }
+  }
+}
 </script>

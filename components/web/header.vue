@@ -17,13 +17,18 @@
             <div class="search-wrap">
               <div class="input-group w-100">
                 <input
+                  v-model="search"
+                  @keypress.enter="searchData"
                   type="text"
                   class="form-control search-form"
                   style="width: 55%"
                   placeholder="mau belanja apa hari ini ?"
                 />
                 <div class="input-group-append">
-                  <button class="btn btn-primary search-button">
+                  <button
+                    @click="searchData"
+                    class="btn btn-primary search-button"
+                  >
                     <i class="fa fa-search"></i>
                   </button>
                 </div>
@@ -32,10 +37,13 @@
           </div>
           <div class="col-lg-5 col-xl-4 col-sm-8 col-md-4 col-7">
             <div class="d-flex justify-content-end">
-              <a href="#" class="btn search-button btn-md d-md-block ml-4"
+              <n-link
+                to="/cart"
+                class="btn search-button btn-md d-md-block ml-4"
                 ><i class="fa fa-shopping-cart"></i>
-                <span class="ml-2">0</span> | Rp. 0</a
-              >
+                <span class="ml-2">{{ isTotalCart }}</span> | Rp.
+                {{ formatPrice(isTotalPrice) }}
+              </n-link>
             </div>
           </div>
         </div>
@@ -82,7 +90,7 @@
                 <nuxt-link
                   :to="{
                     name: 'categories-slug',
-                    params: { slug: category.slug },
+                    params: { slug: category.slug }
                   }"
                   class="dropdown-item"
                   v-for="category in categories"
@@ -156,17 +164,43 @@ export default {
   //hook "fetch"
   async fetch() {
     //fething sliders on Rest API
-    await this.$store.dispatch("web/category/getCategoriesData");
+    await this.$store.dispatch('web/category/getCategoriesData')
+
+    if (this.$auth.loggedIn && this.$auth.strategy.name == 'customer') {
+      //fething carts on Rest API
+      await this.$store.dispatch('web/cart/getCartsData')
+      await this.$store.dispatch('web/cart/getCartPrice')
+    }
   },
+
+  data: () => ({
+    search: ''
+  }),
 
   computed: {
     categories() {
-      return this.$store.state.web.category.categories;
+      return this.$store.state.web.category.categories
     },
+
+    isTotalPrice() {
+      return this.$store.getters['web/cart/isTotalPrice']
+    },
+
+    isTotalCart() {
+      return this.$store.getters['web/cart/isTotalCart']
+    }
   },
 
-  created() {
-    console.log(this.categories);
-  },
-};
+  methods: {
+    searchData() {
+      let params = {
+        name: 'search',
+        query: {
+          q: this.search
+        }
+      }
+      this.$router.push(params)
+    }
+  }
+}
 </script>

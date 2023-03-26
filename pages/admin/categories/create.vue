@@ -59,102 +59,101 @@
 
 <script>
 export default {
-  layout: "admin",
+  layout: 'admin',
 
   // meta
   head() {
     return {
-      title: "Add New Category - Administrator",
-    };
+      title: 'Add New Category - Administrator'
+    }
   },
 
   data() {
     return {
       // state category
       category: {
-        image: "",
-        name: "",
+        image: '',
+        name: ''
       },
 
       // state validation
-      validation: [],
-    };
+      validation: []
+    }
   },
 
   methods: {
     //handle file upload
     handleFileUpload(event) {
       // get image
-      let image = (this.category.image = event.target.files[0]);
-      const kb = Math.round(+image.size / 1024).toFixed(2);
-      const mb = Math.round(+image.size / 1024 / 1000).toFixed(2);
+      let image = (this.category.image = event.target.files[0])
+      const kb = Math.round(+image.size / 1024).toFixed(2)
+      const mb = Math.round(+image.size / 1024 / 1000).toFixed(2)
 
       // check size image not allowed > 1 mb
       if (kb > 1000) {
         // clear value and set  null
-        event.target.value = null;
+        event.target.value = null
 
         // clear state image
-        this.category.image = null;
+        this.category.image = null
 
         //show sweet alert
         this.$swal.fire({
-          title: "OOPS!",
+          title: 'OOPS!',
           text: `Ukuran gambar kamu ${mb} MB, upload ulang dengan ukuran kurang dari 1 mb`,
-          icon: "error",
-        });
+          icon: 'error'
+        })
       }
 
       // check file type
-      if (!image.type.match("image.*")) {
+      if (!image.type.match('image.*')) {
         // if fileType no allowed, then clear value and set null
-        event.target.value = "";
+        event.target.value = ''
         // set state to null
-        this.category.image = null;
+        this.category.image = null
 
         //show sweet alert
         this.$swal.fire({
-          title: "OOPS!",
-          text: "Format File Tidak Didukung!",
-          icon: "error",
+          title: 'OOPS!',
+          text: 'Format File Tidak Didukung!',
+          icon: 'error',
           showConfirmButton: false,
-          timer: 2000,
-        });
+          timer: 2000
+        })
       }
     },
 
     // method store categpry
     async storeCategory() {
       // define formData
-      let formData = new FormData();
+      let formData = new FormData()
 
-      formData.append("image", this.category.image);
-      formData.append("name", this.category.name);
+      formData.append('image', this.category.image)
+      formData.append('name', this.category.name)
 
-      console.log(formData);
       // sending data to action "storeCategory" vuex
       await this.$store
-        .dispatch("admin/category/storeCategory", formData)
+        .dispatch('admin/category/storeCategory', formData)
 
         .then(() => {
           //sweet alert
           this.$swal.fire({
-            title: "BERHASIL!",
-            text: "Data Berhasil Disimpan!",
-            icon: "success",
+            title: 'BERHASIL!',
+            text: 'Data Berhasil Disimpan!',
+            icon: 'success',
             showConfirmButton: false,
-            timer: 2000,
-          });
+            timer: 2000
+          })
           // redirect route "admin-categories"
           this.$router.push({
-            name: "admin-categories",
-          });
+            name: 'admin-categories'
+          })
         })
         .catch((error) => {
           // assign error to state "validation"
-          this.validation = error.response.data;
-        });
-    },
-  },
-};
+          this.validation = error.response.data
+        })
+    }
+  }
+}
 </script>

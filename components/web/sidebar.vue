@@ -34,15 +34,19 @@ export default {
     //method "logout"
     async logout() {
       //logout auth
-      await this.$auth.logout();
+      await this.$auth.logout()
+
+      // set state after logout
+      this.$store.commit('web/cart/SET_CARTS_DATA', [])
+      this.$store.commit('web/cart/SET_CART_PRICE', 0)
 
       //redirect route customer login
       this.$router.push({
-        name: "customer-login",
-      });
-    },
-  },
-};
+        name: 'customer-login'
+      })
+    }
+  }
+}
 </script>
 
 <style scoped>

@@ -46,21 +46,17 @@ export default {
   //hook "fetch"
   async fetch() {
     //fething sliders on Rest API
-    await this.$store.dispatch("web/slider/getSlidersData");
+    await this.$store.dispatch('web/slider/getSlidersData')
   },
 
   //computed
   computed: {
     //sliders
     sliders() {
-      return this.$store.state.web.slider.sliders;
-    },
-  },
-
-  created() {
-    console.log(this.sliders);
-  },
-};
+      return this.$store.state.web.slider.sliders
+    }
+  }
+}
 </script>
 
 <style></style>
