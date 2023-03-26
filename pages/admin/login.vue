@@ -78,51 +78,51 @@
 <script>
 export default {
   // middleware
-  middleware: "authenticated",
+  middleware: 'authenticated',
 
   // layouts
-  layout: "auth",
+  layout: 'auth',
 
   // meta
   head() {
     return {
-      title: "Login - Administrator",
-    };
+      title: 'Login - Administrator'
+    }
   },
 
   data() {
     return {
       // state user
       user: {
-        email: "",
-        password: "",
+        email: '',
+        password: ''
       },
 
       // validation
-      validation: [],
-    };
+      validation: []
+    }
   },
 
   methods: {
     async login() {
       await this.$auth
-        .loginWith("admin", {
+        .loginWith('admin', {
           data: {
             email: this.user.email,
-            password: this.user.password,
-          },
+            password: this.user.password
+          }
         })
         .then(() => {
           // redirect
           this.$router.push({
-            name: "admin-dashboard",
-          });
+            name: 'admin-dashboard'
+          })
         })
         .catch((error) => {
           // assign validation
-          this.validation = error.response.data;
-        });
-    },
-  },
-};
+          this.validation = error.response.data
+        })
+    }
+  }
+}
 </script>

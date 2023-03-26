@@ -50,7 +50,10 @@
                 </table>
               </div>
               <hr />
-              <button class="btn btn-lg btn-warning border-0 shadow-sm">
+              <button
+                @click="onAddToCart"
+                class="btn btn-lg btn-warning border-0 shadow-sm"
+              >
                 <i class="fa fa-shopping-cart"></i> TAMBAH KE KERANJANG
               </button>
             </div>
@@ -100,7 +103,7 @@
                       <div class="description mt-2">
                         <span
                           style="
-                            color: rgb(119, 118, 118);
+                            color: rgb(119, 118, 118)
                             font-size: 15px;
                             font-style: italic;
                           "
@@ -154,6 +157,41 @@ export default {
   // hook async data
   async asyncData({ store, route }) {
     await store.dispatch('web/product/getDetailProduct', route.params.slug)
+  },
+
+  methods: {
+    async onAddToCart() {
+      // check loggedin
+      if (!this.$auth.loggedIn) {
+        return this.$router.push('/customer/login')
+      }
+
+      // check customer role
+      if (this.$auth.strategy.name != 'customer') {
+        return this.$router.push('/customer/login')
+      }
+
+      const { id, stock, weight } = this.isProduct
+      const priceDiscount = this.calculateDiscount(this.isProduct)
+
+      const payload = {
+        product_id: id,
+        price: priceDiscount,
+        qty: stock,
+        weight: weight
+      }
+
+      await this.$store.dispatch('web/cart/storeCart', payload).then(() => {
+        //sweet alert
+        this.$swal.fire({
+          title: 'BERHASIL!',
+          text: 'Product Berhasil Ditambahkan di Keranjang!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000
+        })
+      })
+    }
   },
 
   computed: {

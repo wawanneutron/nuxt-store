@@ -77,41 +77,44 @@
 
 <script>
 export default {
-  middleware: "authenticated",
+  middleware: 'authenticated',
 
-  layout: "default",
+  layout: 'default',
 
   data: () => ({
     user: {
-      email: "",
-      password: "",
+      email: '',
+      password: ''
     },
 
-    validation: [],
+    validation: []
   }),
 
   methods: {
     async login() {
       await this.$auth
-        .loginWith("customer", {
+        .loginWith('customer', {
           data: {
             email: this.user.email,
-            password: this.user.password,
-          },
+            password: this.user.password
+          }
         })
         .then(() => {
+          // fetching cart
+          this.$store.dispatch('web/cart/getCartsData')
+          this.$store.dispatch('web/cart/getCartPrice')
           // redirect
           this.$router.push({
-            name: "customer-dashboard",
-          });
+            name: 'customer-dashboard'
+          })
         })
         .catch((err) => {
           // assign validation
-          this.validation = error.response.data;
-        });
-    },
-  },
-};
+          this.validation = error.response.data
+        })
+    }
+  }
+}
 </script>
 
 <style>
