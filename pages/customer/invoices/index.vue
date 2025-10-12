@@ -68,6 +68,14 @@
                     <i class="fa fa-times-circle"></i> {{ row.item.status }}
                   </button>
                 </template>
+                <template v-slot:cell(actions)="row">
+                  <button
+                    @click="onDetail(row.item.snap_token)"
+                    class="btn btn-sm btn-secondary"
+                  >
+                    Detail
+                  </button>
+                </template>
               </b-table>
             </div>
           </div>
@@ -79,47 +87,53 @@
 
 <script>
 export default {
-  middleware: "isCustomer",
+  middleware: 'isCustomer',
 
-  layout: "default",
+  layout: 'default',
 
   head() {
     return {
-      title: "Invoices - Customer",
-    };
+      title: 'Invoices - Customer'
+    }
   },
 
   data: () => ({
     fields: [
       {
-        label: "No. Invoice",
-        key: "invoice",
+        label: 'No. Invoice',
+        key: 'invoice'
       },
       {
-        label: "Grand Total",
-        key: "grand_total",
+        label: 'Grand Total',
+        key: 'grand_total'
       },
       {
-        label: "Status Payment",
-        key: "status",
-        tdClass: "text-center",
+        label: 'Status Payment',
+        key: 'status',
+        tdClass: 'text-center'
       },
       {
-        label: "Actions",
-        key: "actions",
-        tdClass: "text-center",
-      },
-    ],
+        label: 'Actions',
+        key: 'actions',
+        tdClass: 'text-center'
+      }
+    ]
   }),
 
   async asyncData({ store }) {
-    await store.dispatch("customer/invoice/getInvoicesData");
+    await store.dispatch('customer/invoice/getInvoicesData')
   },
 
   computed: {
     invoices() {
-      return this.$store.state.customer.invoice.invoices;
-    },
+      return this.$store.state.customer.invoice.invoices
+    }
   },
-};
+
+  methods: {
+    onDetail(snap_token) {
+      this.$router.push(`invoices/show/${snap_token}`)
+    }
+  }
+}
 </script>
