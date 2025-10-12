@@ -267,7 +267,7 @@
                         type="radio"
                         name="cost"
                         :id="value.service"
-                        :value="value.cost[0].value + '|' + value.service"
+                        :value="value.cost + '|' + value.service"
                         v-model="courier.courier_service_cost"
                         @change="getServiceCost"
                       />
@@ -276,7 +276,7 @@
                         :for="value.service"
                       >
                         {{ value.service }} - Rp.
-                        {{ formatPrice(value.cost[0].value) }}</label
+                        {{ formatPrice(value.cost) }}</label
                       >
                     </div>
                   </div>
@@ -518,12 +518,12 @@ export default {
         })
 
         .then(async () => {
-          if (this.statusCode.code === 200) {
+          if (this.statusCode) {
             this.state.showService = true
           } else {
             await this.$swal.fire({
               title: 'GAGAL!',
-              text: this.statusCode.description,
+              text: 'Gagal Mendapatkan Data Ongkos Kirim!',
               icon: 'error',
               showConfirmButton: true
             })

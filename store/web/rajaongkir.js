@@ -2,7 +2,7 @@ export const state = () => ({
   provinces: [],
   cities: [],
   costs: [],
-  status: {}
+  status: false
 })
 
 export const mutations = {
@@ -49,8 +49,9 @@ export const actions = {
       this.$axios
         .post('/api/web/rajaongkir/check-ongkir', payload)
         .then((response) => {
-          commit('SET_RESPONSE_STATUS', response.data.data?.status)
-          commit('SET_COSTS_DATA', response.data.data?.results?.[0]?.costs)
+          console.log('response ongkir: ', response)
+          commit('SET_RESPONSE_STATUS', response.data.success)
+          commit('SET_COSTS_DATA', response.data.data)
           resolve()
         })
     })
